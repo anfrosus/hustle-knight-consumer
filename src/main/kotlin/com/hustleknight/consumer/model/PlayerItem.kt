@@ -1,0 +1,43 @@
+package com.hustleknight.consumer.model
+
+import com.hustleknight.consumer.model.enums.ItemCategory
+import jakarta.persistence.*
+
+@Entity
+@Table(name = "PLAYER_ITEM")
+class PlayerItem(
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "PLAYER_ID")
+    var player: Player,
+
+    @Column(name = "ITEM_CATEGORY")
+    @Enumerated(EnumType.STRING)
+    var category: ItemCategory,
+
+    @Column(name = "ITEM_NAME")
+    var name: String,
+
+    @Column(name = "ITEM_REQ_LVL")
+    var reqLevel: Long,
+
+    @Column(name = "ITEM_ATTR_NAME")
+    var attrName: String = category.attrName,
+
+    @Column(name = "ITEM_ATTR_VALUE")
+    var finalAttrValue: Long,
+
+    @Column(name = "ITEM_SUCCESS_CNT")
+    var successCnt: Int = 0,
+
+    @Column(name = "ITEM_REMAINING_CNT")
+    var remainingCnt: Int = category.upgradeableCnt,
+
+    @Column(name = "ITEM_IS_EQUIPPED")
+    var isEquipped: Boolean = false
+
+) {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long? = null
+}
