@@ -4,6 +4,7 @@ import com.hustleknight.consumer.MonsterType
 import com.hustleknight.consumer.exception.CustomException
 import com.hustleknight.consumer.exception.ErrorCode
 import com.hustleknight.consumer.model.enums.MaxValues
+import com.hustleknight.consumer.model.enums.RaidTier
 import jakarta.persistence.*
 
 @Entity
@@ -35,6 +36,16 @@ class Player(
 
     @OneToMany(mappedBy = "player", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     var playerGoodsList: MutableList<PlayerGoods> = mutableListOf(),
+
+    @Column(name = "PLAYER_RAID_SCORE")
+    var raidScore: Long = 0,
+
+    @Column(name = "PLAYER_RAID_RANK", nullable = true)
+    var raidRank: Long? = null,
+
+    @Column(name = "PLAYER_RAID_TIER")
+    @Enumerated(EnumType.STRING)
+    var raidTier: RaidTier = RaidTier.UNRANKED,
 
     ) {
     @Id

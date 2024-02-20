@@ -1,14 +1,20 @@
 spring:
-  profiles:
-    include:
-      - secret
-
-  h2:
-    console:
-      enabled: true
-      path: /h2
   datasource:
-    url: jdbc:h2:mem:db
+    url: ${ SPRING_DATASOURCE_URL }
+    username: ${ SPRING_DATASOURCE_USERNAME }
+    password: ${ SPRING_PASSWORD }
+
+  rabbitmq:
+    host: ${ SPRING_RABBIT_HOST }
+    port: 5672
+    username: ${ SPRING_RABBIT_USERNAME }
+    password: ${ SPRING_PASSWORD }
+
+  data:
+    redis:
+      host: ${ SPRING_REDIS_HOST }
+      port: 6379
+      password: ${ SPRING_PASSWORD }
 
   jpa:
 

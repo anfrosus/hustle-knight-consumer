@@ -3,12 +3,13 @@ name: ci-cd
 on:
   pull_request:
     types: [ closed ]
-    branches: [ "main" ]
+    branches: [ "develop" ]
 
 jobs:
   buid:
 
-    if: github.event.pull_request.merged == true
+    #    if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'develop'
 
     runs-on: ubuntu-latest
 
@@ -21,21 +22,26 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
+      - name: Set Yaml
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: ./src/main/resources/application.yml
+        env:
+          spring.datasource.url: ${{ secrets.SPRING_DATASOURCE_URL }}
+          spring.datasource.username: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
+          spring.datasource.password: ${{ secrets.SPRING_PASSWORD }}
+          spring.rabbitmq.host: ${{ secrets.SPRING_RABBIT_HOST }}
+          spring.rabbitmq.username: ${{ secrets.SPRING_RABBIT_USERNAME }}
+          spring.rabbitmq.password: ${{ secrets.SPRING_PASSWORD }}
+          spring.data.redis.host: ${{ secrets.SPRING_REDIS_HOST }}
+          spring.data.redis.password: ${{ secrets.SPRING_PASSWORD }}
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
           context: .
           push: true
           tags: ${{ secrets.DOCKER_HUB_REPO }}
-
-      #      - name: Copy compose file to server
-      #        uses: appleboy/scp-action@master
-      #        with:
-      #          host: ${{ secrets.SERVER_IP }}
-      #          username: ${{ secrets.SERVER_USER }}
-      #          key: ${{ secrets.SERVER_SSH_KEY }}
-      #          source: "./docker-compose.yml"
-      #          target: "/home/ubuntu/docker1"
 
       - name: Deploy to server
         uses: appleboy/ssh-action@master
@@ -45,6 +51,7 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             echo "${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}" | sudo docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
-            docker stop woozy9/consumer:latest
-            docker rm woozy9/consumer:latest
-            docker run -d -p 8080:8080 woozy9/consumer:latest
+            sudo docker stop consumer || true
+            sudo docker rm consumer || true
+            sudo docker rmi -f ${{ secrets.DOCKER_HUB_REPO }} || true
+            sudo docker run -d -p 8080:8080 --name consumer ${{ secrets.DOCKER_HUB_REPO }}

@@ -1,5 +1,9 @@
 package com.hustleknight.consumer.dto
 
+import com.hustleknight.consumer.model.GoodsDropTable
+import com.hustleknight.consumer.model.Monster
+import com.hustleknight.consumer.model.PlayerItem
+
 data class DropResponseDto(
     var goods: PlayerGoodsResponseDto,
     var itemList: List<PlayerItemResponseDto> = listOf()
