@@ -4,8 +4,9 @@ import com.hustleknight.consumer.redis.RedisService
 import com.hustleknight.consumer.service.BattleService
 import com.hustleknight.consumer.sse.SseService
 import org.springframework.amqp.rabbit.annotation.RabbitListener
-import org.springframework.http.HttpStatus
+import org.springframework.stereotype.Service
 
+@Service
 class Consumer(
     private val redisService: RedisService,
     private val sseService: SseService,
