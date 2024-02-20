@@ -42,8 +42,9 @@ dependencies {
     //Logger
     implementation("org.springframework.boot:spring-boot-starter-logging")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    //H2
-    runtimeOnly("com.h2database:h2")
+    //DATABASE
+//    runtimeOnly("com.h2database:h2")
+    runtimeOnly("com.mysql:mysql-connector-j:8.3.0")
 
     //test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
