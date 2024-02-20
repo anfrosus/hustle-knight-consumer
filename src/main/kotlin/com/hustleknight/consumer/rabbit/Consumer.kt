@@ -22,6 +22,7 @@ class Consumer(
                 battleInfo.dropped = dropResponseDto
 
                 redisService.checkEmitterExistence(battleId)
+                sseService.checkHasEmitter(battleId)
                 sseService.pushBattleResult(battleId, battleInfo)
             }
         } catch (e: Exception) {

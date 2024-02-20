@@ -69,6 +69,7 @@ class SseService(
         val emitter = this.emitterList[playerId]
             ?: throw CustomException(ErrorCode.EMITTER_NOT_FOUND)
         try {
+            emitter.send("hi there im consumed")
             emitter.send(battleResult)
         } catch (e: IOException) {
             e.printStackTrace()
